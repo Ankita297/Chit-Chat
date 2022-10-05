@@ -1,0 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Bungee+Inline&family=Dancing+Script&family=Montserrat&family=Noto+Sans+Buhid&family=Overpass&family=Work+Sans:wght@300&display=swap");
+
+.app {
+  min-height: 100vh;
+  background-image: url("./../images/bg.jpg");
+  display: flex;
+  background-size: cover;
+  background-position: center;
+}

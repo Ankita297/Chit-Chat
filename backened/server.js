@@ -1,21 +1,21 @@
 const express = require("express");
-const dotenv = require("dotenv");
+require("dotenv").config();
+const connectDB = require("./config/db");
+const colors = require("colors");
+const { errorHandler, notFound } = require("./middlewares/errorMiddleware");
+
+const userRoutes=require("./routes/userRoutes")
+connectDB();
 
 const app = express();
+app.use(express.json());
 
-dotenv.config();
+app.use("/api/user", userRoutes);
 
-app.get("/", (req, res) => {
-  res.send("APP is running");
-});
 
-app.get("/api/chat", (req, res) => {
-  res.send("chats");
-});
+app.use(errorHandler);
+app.use(notFound);
 
-app.get("/api/chat/:id", (req, res) => {
-  res.send("filter chat ");
-});
 
 const PORT = process.env.PORT || 5000;
 
