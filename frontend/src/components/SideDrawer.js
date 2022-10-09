@@ -20,6 +20,7 @@ import {
   DrawerContent,
   useTab,
   useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import React, { useState } from "react";
@@ -35,7 +36,7 @@ const SideDrawer = () => {
   const [searchResult, setSearchResult] = useState([]);
 
   const [loading, setLoading] = useState(false);
-  const [loadingChat, setLoadindChat] = useState();
+  const [loadingChat, setLoadingChat] = useState(false);
   const { user, setSelectedChat, chats, setChats } = ChatState();
   const navigate = useNavigate();
 
@@ -97,23 +98,25 @@ const SideDrawer = () => {
 
   const accessChat = async (userId) => {
     try {
-      setLoadindChat(true);
+      setLoadingChat(true);
       const config = {
         headers: {
           "Content-type": "application/json",
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.get(
+      const { data } = await axios.post(
         `/api/chat`,
         { userId },
 
         config
       );
+      if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
 
-      setLoading(false);
+      setLoadingChat(false);
       console.log(data);
       setSelectedChat(data);
+
       onClose();
     } catch (error) {
       toast({
@@ -206,14 +209,16 @@ const SideDrawer = () => {
             {loading ? (
               <ChatLoader />
             ) : (
-              searchResult?.map((user) => (
+              searchResult?.map((x) => (
                 <UserListItem
-                  key={user._id}
-                  user={user}
-                  handleFunction={() => accessChat(user._id)}
+                  key={x._id}
+                  user={x}
+                  handleFunction={() => accessChat(x._id)}
                 />
               ))
             )}
+
+            {loadingChat && <Spinner ml="auto" d="flex" />}
           </DrawerBody>
         </DrawerContent>
       </Drawer>
