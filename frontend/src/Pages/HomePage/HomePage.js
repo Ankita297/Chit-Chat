@@ -1,11 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-import { Box, Container, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+} from "@chakra-ui/react";
 import logo from "../../images/Chit-Chat (1).png";
-import './style.scss'
+import "./style.scss";
 import Signup from "../../components/Signup/Signup";
 import Login from "../../components/Login/Login";
+import { useNavigate } from "react-router-dom";
 const HomePage = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+    if (!userInfo) {
+      navigate("/chats");
+    }
+  }, [navigate]);
+
   return (
     <Container centerContent maxW="xl">
       <Box
@@ -29,19 +49,15 @@ const HomePage = () => {
         <Tabs isFitted variant="soft-rounded">
           <TabList mb="1em">
             <Tab>Login</Tab>
-            <Tab>
-              Sign Up
-            </Tab>
+            <Tab>Sign Up</Tab>
           </TabList>
 
           <TabPanels>
             <TabPanel>
-            
-                <Login />
-              
+              <Login />
             </TabPanel>
             <TabPanel>
-              <Signup/>
+              <Signup />
             </TabPanel>
           </TabPanels>
         </Tabs>
